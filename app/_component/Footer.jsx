@@ -19,7 +19,7 @@ export default function Footer() {
         <p className="text-sm">
           This website was developed by{" "}
           <a
-            href="https://your-link.com" // ← ضع هنا رابطك (GitHub, LinkedIn, Portfolio)
+            href="http://atef-mohamed.netlify.app" // ← ضع هنا رابطك (GitHub, LinkedIn, Portfolio)
             target="_blank"
             rel="noopener noreferrer"
             className="text-indigo-400 hover:text-indigo-300 font-semibold transition">
