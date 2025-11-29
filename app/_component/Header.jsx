@@ -27,6 +27,7 @@ export default function Header() {
     );
   }, []);
   const [openCArt, setOPenCart] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
 
   const cartRef = useRef(null);
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function Header() {
 
   return (
     <header className=" shadow-md bg-white z-20 relative  ">
-      <div className="mx-auto flex h-16  items-center gap-8 sm:px-6 lg:px-8 px-4 shadow-md">
+      <div className="mx-auto flex h-16  items-center gap-8 sm:px-6 lg:px-8 px-4 shadow-md اه">
         <Image src="/logo.svg" alt="image" width={40} height={40} />
 
         <div className="flex flex-1 items-center justify-end md:justify-between">
@@ -131,7 +132,7 @@ export default function Header() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className=" hidden md:block flex items-center gap-4">
             <SignedOut>
               <SignInButton>
                 <button className="bg-[#1754fa] text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
@@ -169,23 +170,109 @@ export default function Header() {
                 )}
               </div>
             </SignedIn>
-
-            <button className="block rounded-sm bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden">
-              <span className="sr-only">Toggle menu</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="size-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
+          </div>
+          <div className="flex gap-0.5 md:hidden">
+            <h2 className="flex items-center">
+              <button className="cursor-pointer">
+                <ShoppingCart onClick={handleOpenCart} />
+              </button>{" "}
+              ({cart?.length || 0})
+            </h2>
+            {openCArt && (
+              <div ref={cartRef}>
+                <Carts openCArt={openCArt} setOPenCart={setOPenCart} />
+              </div>
+            )}
+            <button
+              onClick={() => setOpenMenu(!openMenu)}
+              className="md:hidden relative z-50 flex flex-col gap-1.5 p-2 hover:text-red-600">
+              <span
+                className={`block h-[2px] w-6 bg-gray-700 transition-all duration-300 ${
+                  openMenu ? "rotate-45 translate-y-2" : ""
+                }`}></span>
+              <span
+                className={`block h-[2px] w-6 bg-gray-700 transition-all duration-300 ${
+                  openMenu ? "opacity-0" : ""
+                }`}></span>
+              <span
+                className={`block h-[2px] w-6 bg-gray-700 transition-all duration-300 ${
+                  openMenu ? "-rotate-45 -translate-y-2" : ""
+                }`}></span>
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu / Overlay */}
+
+      <div
+        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+          openMenu
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setOpenMenu(false)}></div>
+
+      <div
+        className={`fixed top-0 left-0 w-3/4 sm:w-1/2 h-full bg-white shadow-xl z-50 p-6 pt-20 
+  transform transition-transform duration-300
+  ${openMenu ? "translate-x-0" : "-translate-x-full"}`}>
+        <nav className="space-y-6">
+          <a
+            className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition"
+            href="/">
+            Home
+          </a>
+          <a
+            className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition"
+            href="#">
+            Explor
+          </a>
+          <a
+            className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition"
+            href="#">
+            Projects
+          </a>
+          <a
+            className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition"
+            href="#">
+            About Us
+          </a>
+          <a
+            className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition"
+            href="#">
+            Contact Us
+          </a>
+        </nav>
+
+        {/* Auth Buttons */}
+        <div className="mt-10 space-y-4">
+          <SignedOut>
+            <SignInButton>
+              <button className="w-full bg-[#1754fa] text-white py-3 rounded-xl">
+                Sign In
+              </button>
+            </SignInButton>
+
+            <SignUpButton>
+              <button className="w-full bg-[#71bfff] text-white py-3 rounded-xl">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </SignedOut>
+
+          <SignedIn>
+            <div className="flex items-center gap-4 mt-4">
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "p-0",
+                    userButtonAvatarImage: "w-10 h-10 object-cover",
+                  },
+                }}
+              />
+            </div>
+          </SignedIn>
         </div>
       </div>
     </header>
