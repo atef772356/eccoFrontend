@@ -6,7 +6,7 @@ function ProductBanner({ products }) {
   const banner = products?.data?.banner?.url;
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-200 dark:border-slate-800 p-4 flex justify-center items-center">
+    <div className="bg-white  rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-200  p-4 flex justify-center items-center">
       {banner ? (
         <Image
           src={banner}
