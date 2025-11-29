@@ -80,11 +80,11 @@ function ProductInfo({ products }) {
       : p;
 
   return product?.title ? (
-    <div className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-200 dark:border-slate-800 m-4 md:m-6 p-6 sm:p-8 w-full max-w-2xl">
+    <div className="group bg-white  rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-200  m-4 md:m-6 p-6 sm:p-8  max-w-2xl">
       {/* Category + Instant Access */}
       <div className="flex flex-wrap justify-between items-center mb-5 gap-3">
         {product?.category && (
-          <span className="bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+          <span className="bg-sky-100  text-sky-700  text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
             {product.category}
           </span>
         )}
@@ -96,7 +96,7 @@ function ProductInfo({ products }) {
       </div>
 
       {/* Title */}
-      <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+      <h1 className="text-2xl sm:text-3xl font-bold text-slate-900  mb-3 leading-snug">
         {product?.title}
       </h1>
 
@@ -111,13 +111,11 @@ function ProductInfo({ products }) {
             }`}
           />
         ))}
-        <span className="text-xs text-slate-500 dark:text-slate-400 ml-1">
-          (120 reviews)
-        </span>
+        <span className="text-xs text-slate-500  ml-1">(120 reviews)</span>
       </div>
 
       {/* Description */}
-      <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+      <p className="text-slate-600  text-sm sm:text-base leading-relaxed mb-6">
         {product?.description?.[0]?.children?.[0]?.text ||
           "No description available."}
       </p>
@@ -125,7 +123,7 @@ function ProductInfo({ products }) {
       {/* Price + Button */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <span className="block text-3xl font-bold text-sky-600 dark:text-sky-400">
+          <span className="block text-3xl font-bold text-sky-600 ">
             {formatPrice(product?.price)}
           </span>
           <span className="text-xs text-slate-400">
@@ -143,11 +141,11 @@ function ProductInfo({ products }) {
 
       {/* What's Included */}
       {product?.whatsincluded?.length > 0 && (
-        <div className="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-xl">
-          <h3 className="flex items-center gap-2 text-sky-600 dark:text-sky-400 font-semibold mb-3">
+        <div className="bg-slate-50  p-4 sm:p-5 rounded-xl">
+          <h3 className="flex items-center gap-2 text-sky-600  font-semibold mb-3">
             <Sparkles size={18} /> What's included
           </h3>
-          <ul className="text-sm sm:text-base text-slate-700 dark:text-slate-300 space-y-1 list-disc list-inside">
+          <ul className="text-sm sm:text-base text-slate-700  space-y-1 list-disc list-inside">
             {product.whatsincluded.map((item, i) => (
               <li key={i}>{item.children?.[0]?.text}</li>
             ))}
@@ -155,7 +153,7 @@ function ProductInfo({ products }) {
         </div>
       )}
 
-      <div className="flex items-center gap-2 mt-5 text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex items-center gap-2 mt-5 text-xs text-slate-500 ">
         <ShieldCheck size={14} />
         Secure Payment Guaranteed
       </div>
