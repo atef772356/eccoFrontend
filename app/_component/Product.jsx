@@ -13,12 +13,13 @@ export default function Product() {
     });
   };
 
+
   useEffect(() => {
     getProduct_();
   }, []); // 👈 لازم [] علشان مايتنفذش كل ريندر
   console.log("the productList is", productList);
   return productList[0]?.title ? (
-    <div>
+    <div calssName= "bg-white">
       <ProductList product={productList} />
     </div>
   ) : (
