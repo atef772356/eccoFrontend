@@ -12,7 +12,7 @@ export default function ProductItem({ products }) {
 
   return (
     <Link href={`/product-detials/${products?.documentId}`}>
-      <div className="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-200 dark:border-slate-800 m-5">
+      <div className="group bg-white  rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-slate-200 dark:border-slate-800 m-5">
         {/* Banner */}
         <div className="relative h-52 w-full overflow-hidden">
           <img
@@ -23,7 +23,7 @@ export default function ProductItem({ products }) {
 
           {/* Category */}
           {products?.category && (
-            <span className="absolute top-3 left-3 bg-white/90 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 text-xs font-semibold px-3 py-1 rounded-full shadow">
+            <span className="absolute top-3 left-3 bg-white/90  text-slate-800  text-xs font-semibold px-3 py-1 rounded-full shadow">
               {products.category}
             </span>
           )}
@@ -38,16 +38,16 @@ export default function ProductItem({ products }) {
 
         {/* Content */}
         <div className="p-5">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">
+          <h3 className="text-lg font-bold text-slate-900  mb-2 line-clamp-1">
             {products?.title}
           </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 mb-4">
+          <p className="text-sm text-slate-600  line-clamp-2 mb-4">
             {products?.description?.[0]?.children?.[0]?.text || ""}
           </p>
 
           {/* Price */}
           <div className="flex items-center justify-between mb-4">
-            <span className="text-lg font-semibold text-sky-600 dark:text-sky-400">
+            <span className="text-lg font-semibold text-sky-600 ">
               {formatPrice(products?.price)}
             </span>
             <button className="px-4 py-2 text-sm font-medium bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors duration-200">
@@ -58,7 +58,7 @@ export default function ProductItem({ products }) {
           {/* What's Included */}
           {products?.whatsincluded?.length > 0 && (
             <details className="group">
-              <summary className="text-sm text-sky-600 dark:text-sky-400 cursor-pointer hover:underline">
+              <summary className="text-sm text-sky-600  cursor-pointer hover:underline">
                 What's included
               </summary>
               <div className="mt-2 text-sm text-slate-700 dark:text-slate-300">
