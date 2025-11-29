@@ -6,6 +6,7 @@ import Header from "./_component/Header";
 import Footer from "./_component/Footer";
 import ContextCart from "./_context/ContextCart";
 import { useState } from "react";
+import Head from "next/head";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,8 +24,11 @@ export default function RootLayout(props) {
     <ContextCart.Provider value={[cart, setCart]}>
       <ClerkProvider>
         <html lang="en">
+          <Head>
+            <meta name="color-scheme" content="light" />
+          </Head>
           <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}>
+            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50 `}>
             <Header />
             {children}
 
