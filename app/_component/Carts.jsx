@@ -1,27 +1,22 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react"; // 1. مسحنا useEffect و useState لأننا مش محتاجينهم هنا
 import ContextCart from "../_context/ContextCart";
 import Link from "next/link";
-import cartApi from "../_Utils/cartApi";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/nextjs"; // مسحنا cartApi
 import { TrashIcon } from "lucide-react";
+import cartApi from "../_Utils/cartApi"; // نحتاجه فقط للحذف
 
 export default function Carts({ openCArt, setOPenCart }) {
+  // نعتمد فقط على الكونتكست الذي ملأه الـ Header
   const [cart, setCart] = useContext(ContextCart);
-  const { user } = useUser();
+  // لا حاجة لـ useUser هنا لأننا لن نجلب داتا، نحن فقط نعرضها ونحذف
 
-  useEffect(() => {
-    if (user) {
-      cartApi
-        .getCart(user.primaryEmailAddress.emailAddress)
-        .then((res) => {
-          setCart(res?.data?.data || []);
-        })
-        .catch((err) => console.error("Error loading cart:", err));
-    }
-  }, [user, setCart]);
+  // 🔥 تم حذف الـ useEffect بالكامل من هنا 🔥
+  // البيانات تأتي جاهزة من الـ Header عبر الـ ContextCart
 
   const deleteCartItemFromList = (documentId) => {
+    if (!documentId) return;
+
     cartApi
       .deleteCartItem(documentId)
       .then(() => {
@@ -34,19 +29,12 @@ export default function Carts({ openCArt, setOPenCart }) {
       });
   };
 
-  function handleOpenCart() {
-    setOPenCart(!openCArt);
-  }
-
   return (
     <div
-      className="absolute right-10 top-14 w-[380px] max-h-[400px] overflow-auto z-50 rounded-xl shadow-2xl border border-gray-200 bg-white p-6"
-      aria-modal="true"
-      role="dialog"
-      tabIndex={-1}>
-      {/* Close button */}
+      onClick={(e) => e.stopPropagation()}
+      className="absolute right-10 top-14 w-[380px] max-h-[400px] overflow-auto z-50 rounded-xl shadow-2xl border border-gray-200 bg-white p-6">
       <button
-        onClick={handleOpenCart}
+        onClick={() => setOPenCart(false)}
         className="cursor-pointer hover:text-red-600 absolute right-4 top-4 text-gray-500 transition hover:scale-125">
         ✕
       </button>
@@ -55,9 +43,8 @@ export default function Carts({ openCArt, setOPenCart }) {
         My Cart
       </h2>
 
-      {/* Cart Items */}
       <ul className="space-y-5">
-        {cart?.length === 0 && (
+        {(!cart || cart.length === 0) && (
           <p className="text-center text-gray-500">Your cart is empty.</p>
         )}
 
@@ -67,8 +54,12 @@ export default function Carts({ openCArt, setOPenCart }) {
 
           return (
             <li
-              key={item?.documentId}
+              key={item?.documentId || item?.id}
               className="flex items-center gap-4 bg-gray-50 rounded-lg p-3 shadow-sm hover:shadow-md transition">
+              {/* نصيحة الصور:
+                  حاول دائماً استخدام الصور المصغرة إذا كانت متوفرة من Strapi
+                  example: src={product?.banner?.formats?.thumbnail?.url || product?.banner?.url}
+              */}
               <img
                 src={product?.banner?.url}
                 alt={product?.title}
@@ -94,7 +85,6 @@ export default function Carts({ openCArt, setOPenCart }) {
         })}
       </ul>
 
-      {/* Actions */}
       <div className="mt-6 space-y-4 text-center">
         <Link
           href="/cart"
@@ -105,6 +95,7 @@ export default function Carts({ openCArt, setOPenCart }) {
 
         <Link
           href="/"
+          onClick={() => setOPenCart(false)}
           className="inline-block text-sm text-gray-500 underline underline-offset-4 transition hover:text-gray-700">
           Continue shopping
         </Link>
