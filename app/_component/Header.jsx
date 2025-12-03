@@ -9,49 +9,35 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import { useRef } from "react";
-
+// تم إزالة useRef لأنه لم يعد مطلوباً للإغلاق
 import { ShoppingCart } from "lucide-react";
 import ContextCart from "../_context/ContextCart";
 import cartApi from "../_Utils/cartApi";
 import Carts from "./Carts";
 import { usePathname } from "next/navigation";
+
 export default function Header() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [cart, setCart] = useContext(ContextCart);
+
   useEffect(() => {
     setIsLogedIn(
       window.location.href.toString().includes("sign-in") ||
         window.location.href.toString().includes("sign-up")
     );
   }, []);
+
   const [openCArt, setOPenCart] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
 
-  const cartRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (cartRef.current && !cartRef.current.contains(e.target)) {
-        setOPenCart(false);
-      }
-    };
+  // 🔥 تم حذف الـ useEffect الخاص بـ mousedown لأنه كان سبب المشكلة 🔥
+  // سنعتمد على الـ Overlay في الأسفل فقط
 
-    if (openCArt) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openCArt]);
   function handleOpenCart() {
-    if (!openCArt) {
-      setOPenCart(true);
-    } else {
-      setOPenCart(false);
-    }
+    setOPenCart(!openCArt);
   }
+
   useEffect(() => {
     if (isLoaded && user) {
       getCartItems();
@@ -74,7 +60,6 @@ export default function Header() {
   };
   const pathname = usePathname();
 
-  // لو الصفحة هي sign-in أو sign-up أو login → لا يظهر الفوتر
   const hideFooter =
     pathname?.includes("sign-in") ||
     pathname?.includes("sign-up") ||
@@ -83,8 +68,8 @@ export default function Header() {
   if (hideFooter) return null;
 
   return (
-    <header className=" shadow-md bg-white z-20 relative  ">
-      <div className="mx-auto flex h-16  items-center gap-8 sm:px-6 lg:px-8 px-4 shadow-md اه">
+    <header className=" shadow-md bg-white z-20 relative">
+      <div className="mx-auto flex h-16 items-center gap-8 sm:px-6 lg:px-8 px-4 shadow-md">
         <Image src="/logo.svg" alt="image" width={40} height={40} />
 
         <div className="flex flex-1 items-center justify-end md:justify-between">
@@ -97,7 +82,6 @@ export default function Header() {
                   Home
                 </a>
               </li>
-
               <li>
                 <a
                   className="text-gray-500 transition hover:text-gray-500/75"
@@ -105,7 +89,6 @@ export default function Header() {
                   Explor
                 </a>
               </li>
-
               <li>
                 <a
                   className="text-gray-500 transition hover:text-gray-500/75"
@@ -113,7 +96,6 @@ export default function Header() {
                   Projects
                 </a>
               </li>
-
               <li>
                 <a
                   className="text-gray-500 transition hover:text-gray-500/75"
@@ -121,7 +103,6 @@ export default function Header() {
                   About Us
                 </a>
               </li>
-
               <li>
                 <a
                   className="text-gray-500 transition hover:text-gray-500/75"
@@ -149,40 +130,54 @@ export default function Header() {
             <SignedIn>
               <div className="flex items-center gap-4">
                 <h2 className="flex items-center">
-                  <button className="cursor-pointer">
-                    <ShoppingCart onClick={handleOpenCart} />
+                  <button className="cursor-pointer" onClick={handleOpenCart}>
+                    <ShoppingCart />
                   </button>{" "}
                   ({cart?.length || 0})
                 </h2>
                 <UserButton
                   appearance={{
                     elements: {
-                      userButtonAvatarBox: "p-0 !important", // إزالة أي padding داخلي
+                      userButtonAvatarBox: "p-0 !important",
                       userButtonAvatarImage:
                         "w-10 h-10 !important object-cover !important",
                     },
                   }}
                 />
+
+                {/* Desktop Cart Overlay */}
                 {openCArt && (
-                  <div ref={cartRef}>
+                  <div
+                    className="fixed inset-0 z-40 bg-black/20"
+                    // هنا عند الضغط على الخلفية يتم الإغلاق
+                    // وبما أننا وضعنا stopPropagation في Carts.js
+                    // فالضغط داخل الكارت لن يفعل هذا الكود
+                    onClick={() => setOPenCart(false)}>
                     <Carts openCArt={openCArt} setOPenCart={setOPenCart} />
                   </div>
                 )}
               </div>
             </SignedIn>
           </div>
+
+          {/* Mobile View */}
           <div className="flex gap-0.5 md:hidden">
             <h2 className="flex items-center">
-              <button className="cursor-pointer">
-                <ShoppingCart onClick={handleOpenCart} />
-              </button>{" "}
+              <button onClick={() => setOPenCart((prev) => !prev)}>
+                <ShoppingCart />
+              </button>
               ({cart?.length || 0})
             </h2>
+
+            {/* Mobile Cart Overlay - تم تحديثه ليشبه الديسكتوب */}
             {openCArt && (
-              <div ref={cartRef}>
+              <div
+                className="fixed inset-0 z-40 bg-black/20"
+                onClick={() => setOPenCart(false)}>
                 <Carts openCArt={openCArt} setOPenCart={setOPenCart} />
               </div>
             )}
+
             <button
               onClick={() => setOpenMenu(!openMenu)}
               className="md:hidden relative z-50 flex flex-col gap-1.5 p-2 hover:text-red-600">
@@ -204,7 +199,6 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu / Overlay */}
-
       <div
         className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300 ${
           openMenu
@@ -214,9 +208,9 @@ export default function Header() {
         onClick={() => setOpenMenu(false)}></div>
 
       <div
-        className={`fixed top-0 left-0 w-3/4 sm:w-1/2 h-full bg-white shadow-xl z-50 p-6 pt-20 
-  transform transition-transform duration-300
-  ${openMenu ? "translate-x-0" : "-translate-x-full"}`}>
+        className={`fixed top-0 left-0 w-3/4 sm:w-1/2 h-full bg-white shadow-xl z-50 p-6 pt-20 transform transition-transform duration-300 ${
+          openMenu ? "translate-x-0" : "-translate-x-full"
+        }`}>
         <nav className="space-y-6">
           <a
             className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition"
@@ -245,7 +239,6 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* Auth Buttons */}
         <div className="mt-10 space-y-4">
           <SignedOut>
             <SignInButton>
@@ -253,7 +246,6 @@ export default function Header() {
                 Sign In
               </button>
             </SignInButton>
-
             <SignUpButton>
               <button className="w-full bg-[#71bfff] text-white py-3 rounded-xl">
                 Sign Up
